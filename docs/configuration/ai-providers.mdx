@@ -1,23 +1,23 @@
 ---
-title: "连接 AI 服务商以启用自动翻译"
-sidebarTitle: "AI 服务商"
-description: "在 `语言模型` 标签页中配置 provider profile，并区分连接设置与全局翻译参数。"
+title: "AI 서비스 제공업체를 연결하여 자동 번역 활성화"
+sidebarTitle: "AI 서비스 제공업체"
+description: "언어 모델(Language Models)' 탭에서 제공업체 프로필을 설정하고, 연결 설정과 전역 번역 매개변수를 구분하여 관리하세요."
 ---
 
-当前源码的 AI 服务商配置入口在 **设置 → 社区插件 → I18N → 语言模型**。这一页负责 provider profile、本地连接测试和 `llmResponseFormat`。
+현재 소스 코드에서 AI 서비스 제공업체 관련 설정 항목은 **Settings → Community Plugins → I18N → Language Models**에 위치해 있습니다. 이 페이지에서는 서비스 제공업체 프로필, 로컬 연결 테스트, 그리고 `llmResponseFormat`을 관리합니다.
 
-## 支持的服务商
+## 지원하는 서비스 제공업체 목록
 
-| # | 服务商 | 平台 |
+| # | 서비스 제공업체 | 플랫폼 |
 |---|--------|------|
-| 1 | OpenAI-compatible（自定义） | [platform.openai.com](https://platform.openai.com/) |
+| 1 | OpenAI-compatible（사용자 정의） | [platform.openai.com](https://platform.openai.com/) |
 | 2 | Gemini | [aistudio.google.com](https://aistudio.google.com/) |
-| 3 | Ollama（本地） | [ollama.com](https://ollama.com/) |
+| 3 | Ollama（Local） | [ollama.com](https://ollama.com/) |
 | 4 | DeepSeek | [platform.deepseek.com](https://platform.deepseek.com/) |
-| 5 | 智谱 AI（GLM） | [open.bigmodel.cn](https://open.bigmodel.cn/) |
+| 5 | GLM | [open.bigmodel.cn](https://open.bigmodel.cn/) |
 | 6 | Moonshot（Kimi） | [platform.moonshot.cn](https://platform.moonshot.cn/) |
-| 7 | 阿里云（Qwen / 通义） | [dashscope.console.aliyun.com](https://dashscope.console.aliyun.com/) |
-| 8 | 百度（ERNIE / 千帆） | [console.bce.baidu.com/qianfan](https://console.bce.baidu.com/qianfan/) |
+| 7 | Alibaba（Qwen） | [dashscope.console.aliyun.com](https://dashscope.console.aliyun.com/) |
+| 8 | Baidu（ERNIE） | [console.bce.baidu.com/qianfan](https://console.bce.baidu.com/qianfan/) |
 | 9 | 字节跳动（Doubao / Ark） | [console.volcengine.com/ark](https://console.volcengine.com/ark/) |
 | 10 | Groq | [console.groq.com](https://console.groq.com/) |
 | 11 | SiliconFlow | [siliconflow.cn](https://siliconflow.cn/) |
@@ -27,52 +27,32 @@ description: "在 `语言模型` 标签页中配置 provider profile，并区分
 | 15 | MiniMax | [platform.minimaxi.com](https://platform.minimaxi.com/) |
 | 16 | StepFun | [platform.stepfun.com](https://platform.stepfun.com/) |
 
-## 添加一个 provider profile
+* Ollama 기본 주소 : `http://localhost:11434`
 
-<Steps>
-  <Step title="打开语言模型标签页">
-    进入 **设置 → 社区插件 → I18N → 语言模型**。
-  </Step>
-  <Step title="选择服务商">
-    在 provider 下拉框中选择目标平台。
-  </Step>
-  <Step title="创建或切换 profile">
-    当前 UI 支持新增、切换和删除 profile。
-  </Step>
-  <Step title="填写连接信息">
-    新建 profile 时，插件会写入该服务商的默认 URL 和默认模型；你再补充 API Key、模型名和价格字段。
-  </Step>
-  <Step title="执行测试连接">
-    点击测试按钮，运行连接诊断。
-  </Step>
-</Steps>
+## 서비스 제공자 프로필 추가
 
-## 当前页中的关键字段
+| 단계 | 작업 내용 | 상세 설명 |
+| --- | --- | --- |
+| **1** | **언어 모델 탭 열기** | **설정(Settings) → 커뮤니티 플러그인(Community Plugins) → I18N → 언어 모델(Language Model)** |
+| **2** | **서비스 제공업체 선택** | `provider` 드롭다운 메뉴에서 사용할 AI 플랫폼을 선택합니다. |
+| **3** | **프로필 생성 및 전환** | 프로필(Profile) 추가, 전환, 삭제 기능을 통해 여러 설정값을 관리합니다. |
+| **4** | **연결 정보 입력** | 기본 URL과 모델 정보는 자동 입력됩니다. 발급받은 API 키, 모델명, 가격 정보를 입력하세요. |
+| **5** | **연결 테스트** | **'테스트'** 버튼을 클릭하여 API 연결 진단을 실행하고 정상 작동 여부를 확인합니다. |
 
-<AccordionGroup>
-  <Accordion title="URL / API Key / Model">
-    这些字段属于当前 provider profile，彼此独立保存。
-  </Accordion>
+## 현재 페이지의 주요 필드
 
-  <Accordion title="priceInput / priceOutput">
-    这两个字段驱动费用预估，单位是人民币 / 每百万 Token。
-  </Accordion>
+| 항목 | 내용 |
+| --- | --- |
+| **URL / API Key / Model** | 이 필드들은 현재 제공자(provider) 프로필에 속하며, 각각 독립적으로 저장됩니다. |
+| **priceInput / priceOutput** | 이 두 필드는 비용 추산의 기준이 되며, 단위는 백만 토큰당 CNY(위안화)입니다. |
+| **llmResponseFormat** | 이 전역(global) 필드는 `Language Model` 페이지에서 설정하며, 현재 기본값은 `text`입니다. |
 
-  <Accordion title="llmResponseFormat">
-    这个全局字段在 `语言模型` 页面编辑，当前默认值是 `text`。
-  </Accordion>
-</AccordionGroup>
+## 현재 페이지에서 직접 편집하지 않는 필드
 
-## 不在当前页直接编辑的字段
-
-下面这些全局翻译参数由 AST / Regex / Theme 的 AI 面板读写：
+다음 전역 번역 매개변수들은 AST / Regex / Theme 관련 AI 패널에서 읽고 쓰는 항목입니다.
 
 - `llmLanguage`
 - `llmStyle`
 - `llmBatchSize`
 - `llmConcurrencyLimit`
 - `llmTimeout`
-
-<Note>
-  Ollama 默认地址是 `http://localhost:11434`。
-</Note>
