@@ -17,73 +17,37 @@ description: "실제 진입점을 기준으로 AST 구성, RE 구성, Immersive 
 
 AST 추출기는 플러그인의 JavaScript를 구문 분석하고, 화이트리스트와 필터링 규칙을 바탕으로 어떤 문자열을 추출 결과에 포함할지 결정합니다.
 
-<AccordionGroup>
-  <Accordion title="astAssignments：변수 화이트리스트">
-    변수 이름이 이 목록의 항목과 일치하면, 해당 변수에 할당된 문자열이 추출 결과에 포함됩니다.
-  </Accordion>
-  <Accordion title="astFunctions：함수 화이트리스트">
-    함수 이름이 이 목록의 항목과 일치하면, 해당 매개변수 문자열이 추출 결과에 포함됩니다.
-  </Accordion>
-  <Accordion title="astKeys：객체 키 화이트리스트">
-    객체 키가 이 목록의 항목과 일치하면, 해당 값이 추출 결과에 포함됩니다.
-  </Accordion>
-  <Accordion title="astRejectRe：제외 규칙">
-    이 정규 표현식과 일치하는 경우 즉시 폐기됩니다.
-  </Accordion>
-  <Accordion title="astValidRe：보존 규칙">
-    최소한 하나 이상의 보존 규칙과 일치하는 경우에만 보존됩니다.
-  </Accordion>
-</AccordionGroup>
+| 항목 | 설명 |
+| --- | --- |
+| **변수 화이트리스트** | 변수 이름이 이 목록의 항목과 일치 시 해당 변수에 할당된 문자열이 추출 결과에 포함 |
+| **함수 화이트리스트** | 함수 이름이 이 목록의 항목과 일치 시 해당 매개변수 문자열이 추출 결과에 포함 |
+| **`astKeys` (객체 키 화이트리스트)** | 객체 키가 이 목록의 항목과 일치 시 해당 값이 추출 결과에 포함 |
+| **`astRejectRe` (제외 규칙)** | 이 정규 표현식과 일치하는 경우 즉시 폐기 |
+| **`astValidRe` (보존 규칙)** | 최소한 하나 이상의 보존 규칙과 일치하는 경우에만 보존 |
 
 ## 정규 표현식(Regex) 추출 규칙
 
 정규 표현식 추출기는 원본 텍스트를 대상으로 직접 매칭을 수행합니다.
 
-<AccordionGroup>
-  <Accordion title="reDatas：캡처 규칙">
-    정규 표현식의 캡처 그룹을 기반으로 후보 문자열을 읽어들입니다.
-  </Accordion>
-  <Accordion title="reFlags：정규 표현식 플래그">
-    **기본값：** `gs`
-  </Accordion>
-  <Accordion title="reLength：최대 길이">
-    **기본：** `300`
-  </Accordion>
-  <Accordion title="reRejectRe：제외 규칙">
-    특정 Regex 추출 결과를 제외하는 데 사용되는 정규 표현식입니다.
-  </Accordion>
-  <Accordion title="reValidRe：보존 규칙">
-    특정 Regex 추출 결과를 유지하는 데 사용되는 정규 표현식입니다.
-  </Accordion>
-</AccordionGroup>
+| 항목 | 기본값 | 설명 |
+| --- | --- | --- |
+| **`reDatas` (캡처 규칙)** | - | Regex의 캡처 그룹을 기반으로 후보 문자열 조회 |
+| **`reFlags` (정규 표현식 플래그)** | `gs` | Regex 매칭 시 적용할 옵션 플래그 |
+| **`reLength` (최대 길이)** | `300` | 추출할 문자열의 최대 길이 지정 |
+| **`reRejectRe` (제외 규칙)** | - | 특정 Regex 추출 결과를 제외하는 데 사용되는 정규 표현식 |
+| **`reValidRe` (보존 규칙)** | - | 특정 Regex 추출 결과를 유지하는 데 사용되는 정규 표현식 |
 
 ## Cloud 네트워크 관련 필드
 
-<AccordionGroup>
-  <Accordion title="githubProxyUrl：GitHub 프록시">
-    **기본값：** `https://ghp.ci/`
-
-    현재 `일반 설정(General Settings)`에 위치해 있습니다 (드롭다운).
-  </Accordion>
-  <Accordion title="defaultCloudRepo：기본 클라우드 저장소">
-    **기본값：** 빈 문자열
-
-    현재 `일반 설정(General Settings)`에 위치해 있습니다 (텍스트 입력).
-  </Accordion>
-  <Accordion title="cloudRepos：저장된 저장소 목록">
-    이 항목은 설정 데이터에 저장됩니다. 저장소를 탐색할 때 클라우드 뷰(Cloud view)에서 읽고 쓰며, 설정 페이지에 별도의 입력 컨트롤은 없습니다.
-  </Accordion>
-</AccordionGroup>
+| 항목 | 기본값 | 비고 |
+| --- | --- | --- |
+| **`githubProxyUrl` (GitHub 프록시)** | `https://ghp.ci/` | `일반 설정` (드롭다운) |
+| **`defaultCloudRepo` (기본 클라우드 저장소)** | *(빈 문자열)* | `일반 설정` (텍스트 입력) |
+| **`cloudRepos` (저장된 저장소 목록)** | *(자동 저장)* | 클라우드 뷰(Cloud view)에서 읽고 쓰며 탐색 시 활용되는 저장소 데이터 (별도 UI 컨트롤 없음) |
 
 ## 몰입형 번역（IMT）
 
-<AccordionGroup>
-  <Accordion title="modeImt：몰입형 번역 활성화">
-    **기본값：** `false`
-
-    활성화 시, 플러그인이 일치하는 UI 요소에 대해 실시간 번역을 수행합니다.
-  </Accordion>
-  <Accordion title="imtPagerule：선택기(Selector) 규칙">
-    이 필드는 몰입형 번역 대상에 포함하거나 제외할 요소를 지정하는 선택자(Selector) 규칙을 정의합니다.
-  </Accordion>
-</AccordionGroup>
+| 항목 | 기본값 | 설명 |
+| --- | --- | --- |
+| **`modeImt` (몰입형 번역 활성화)** | `false` | 활성화 시, 플러그인이 일치하는 UI 요소에 대해 실시간 번역을 수행 | 
+| **`imtPagerule` (선택 규칙)** | - | 몰입형 번역 대상에 포함하거나 제외할 요소를 지정하는 선택 규칙(Selector) 정의 |
