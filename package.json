@@ -1,7 +1,7 @@
 {
     "name": "obsidian-i18n",
     "version": "2.0.21",
-    "description": "Obsidian国际化翻译插件，提供多语言支持和翻译管理功能",
+    "description": "Obsidian용 다국어 번역 플러그인 (커뮤니티 플러그인 번역 지원)",
     "main": "main.js",
     "scripts": {
         "dev": "concurrently \"npm run dev:js\" \"npm run dev:css\"",
