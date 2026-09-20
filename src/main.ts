@@ -84,40 +84,40 @@ export default class I18N extends Plugin {
         if (this.settings.agreement) {
             this.initViews();           // [초기화] 뷰
             this.initCores();           // [초기화] 핵심 기능
-            this.coreManager.setupRibbonIcons();    // [초기화] 리본 아이콘1
+            this.coreManager.setupRibbonIcons();    // [초기화] 리본 아이콘
 
             useGlobalStoreInstance.getState().setI18n(this);
             this.addSettingTab(new I18nSettingTab(this.app, this));
 
-            // [자동화] 注册定时扫描任务 (每 30 分钟检查一次是否到达设定的间隔)
+            // [자동화] 예약된 검사 작업 등록 (설정된 값에 도달할 때까지 30분마다 확인)
             this.registerInterval(
                 (window as any).setInterval(() => {
                     this.autoManager.checkAndRunDiscovery();
                 }, 30 * 60 * 1000)
             );
 
-            // 启动时延迟 30 秒执行一次增量检查 (避免拥塞启动过程)
+            // 시작 중 증분 검사를 수행하기 위해 30초 지연 (프로세스 혼합 방지)
             setTimeout(() => {
                 this.autoManager.checkAndRunDiscovery();
             }, 30 * 1000);
         } else {
-            // 注册并打开协议视图
+            // 프로토콜 보기 등록 및 조회
             this.view.addView(AGREEMENT_VIEW_TYPE, (leaf) => new AgreementView(leaf, this), true);
             this.view.activateView(AGREEMENT_VIEW_TYPE);
         }
     }
 
     async onunload() {
-        this.view.deactivateAllViews(); // 卸载所有视图
-        if (this.settings.modeImt) this.coreManager.deactivateIMT();  // 卸载沉浸式翻译
+        this.view.deactivateAllViews(); // 모든 뷰 삭제
+        if (this.settings.modeImt) this.coreManager.deactivateIMT();  // 몰입형 번역 제거
         this.cleanupDevDebug();
     }
 
-    // [配置类] 加载
+    // [설정] load
     public async loadSettings() {
         this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 
-        // 旧版数字 ID 升级迁移
+        // 구 버전 디지털 ID 업그레이드 및 이전
         if (typeof this.settings.llmApi === 'number') {
             const legacyApiMap: Record<number, string> = {
                 1: 'openai', 2: 'gemini', 3: 'ollama', 4: 'deepseek', 5: 'zhipu', 
@@ -135,7 +135,7 @@ export default class I18N extends Plugin {
     public async saveSettings() { await this.saveData(this.settings); }
 
     /**
-     * 统一迁移所有旧版服务商配置到多 Profile 结构
+     * 모든 기존 서비스 제공업체 설정을 다중 프로필 구조로 통합하여 마이그레이션
      */
     private async migrateLLMProfiles() {
         let modified = false;
@@ -176,7 +176,8 @@ export default class I18N extends Plugin {
                 });
             }
 
-            // 删除旧字段，防止数据冗余并完成终极迭代 (使用 as any 将其从 settings 对象中彻底移除)
+            // 데이터 중복을 방지하기 위해 기존 필드를 제거하고 마지막 반복 작업을 완료하세요.
+			// (`settings` 객체에서 완전히 제거하려면 `as any`를 사용하세요).
             const legacyUrlField = `llm${config.labelKey}Url`;
             const legacyKeyField = `llm${config.labelKey}Key`;
             const legacyModelField = `llm${config.labelKey}Model`;
@@ -185,7 +186,7 @@ export default class I18N extends Plugin {
             if ((this.settings as any)[legacyModelField] !== undefined) { delete (this.settings as any)[legacyModelField]; modified = true; }
         });
 
-        // 清理全局冗余自定义价格字段
+        // 전역적으로 불필요한 사용자 정의 가격 필드 정리
         if ((this.settings as any).llmUseCustomPrice !== undefined) { delete (this.settings as any).llmUseCustomPrice; modified = true; }
         if ((this.settings as any).llmPriceInputCustom !== undefined) { delete (this.settings as any).llmPriceInputCustom; modified = true; }
         if ((this.settings as any).llmPriceOutputCustom !== undefined) { delete (this.settings as any).llmPriceOutputCustom; modified = true; }
@@ -195,7 +196,7 @@ export default class I18N extends Plugin {
 
 
     /**
-     * 初始化核心管理器
+     * 핵심 관리자 초기화
      */
     private initManagers() {
         this.logger = LoggerManager.getInstance();
@@ -208,21 +209,21 @@ export default class I18N extends Plugin {
         const i18nPluginDirBase = path.join(path.normalize(this.app.vault.adapter.getBasePath()), this.manifest.dir);
         this.backupManager = new BackupManager(i18nPluginDirBase);
 
-        // [管理器] 翻译源管理器
+        // [관리자] 번역 관리자
         // @ts-ignore
         const i18nPluginDir = path.join(path.normalize(this.app.vault.adapter.getBasePath()), this.manifest.dir);
         this.sourceManager = new SourceManager(i18nPluginDir);
 
-        // [管理器] 注入管理器
+        // [관리자] 사출 관리자
         this.injectorManager = new InjectorManager(this);
 
-        // [管理器] 核心管理器
+        // [관리자] 핵심 관리자
         this.coreManager = new CoreManager(this);
 
-        // [管理器] 自动化管理器
+        // [관리자] 자동화 관리자
         this.autoManager = new AutoManager(this);
 
-        // [管理器] 提取助手管理器 (暂时隐藏)
+        // [관리자] 추출 보조 관리자 (일시적으로 숨기기)
         // this.extractManager = new ExtractManager(this);
     }
 
