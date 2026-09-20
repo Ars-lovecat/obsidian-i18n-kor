@@ -12,7 +12,7 @@ import {
     WizardCardItemConfig, WizardActionConfig,
 } from '~/types';
 
-// ========== 图标映射 ==========
+// ========== 아이콘 매핑 ==========
 
 const ICON_MAP: Record<string, LucideIcon> = {
     PlaySquare,
@@ -27,7 +27,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
     Afdian: Coffee,
 };
 
-// ========== 渲染用类型 ==========
+// ========== 렌더링 유형 ==========
 
 type WizardItem =
     | {
@@ -47,14 +47,14 @@ interface WizardSection {
     items: WizardItem[];
 }
 
-// ========== Hook: 配置转渲染数据 ==========
+// ========== Hook: 렌더링 데이터 설정 ==========
 
 function useWizardSections(): WizardSection[] {
     const { t } = useTranslation();
     const i18n = useGlobalStore(state => state.i18n);
     const config = getWizardConfig();
 
-    /** 将 action 配置转换为回调函数 */
+    /** action 설정을 callback 함수로 변경 */
     const resolveAction = useCallback((action: WizardActionConfig): (() => void) => {
         switch (action.type) {
             case 'url':
@@ -74,7 +74,7 @@ function useWizardSections(): WizardSection[] {
         }
     }, [i18n]);
 
-    /** 将单个 item 配置转换为渲染数据 */
+    /** 단일 항목 구성을 렌더링 데이터로 변환합니다. */
     const resolveItem = useCallback((item: WizardItemConfig): WizardItem => {
         if (item.type === 'placeholder') {
             return { type: 'placeholder', text: t(item.textKey as any) as string };
@@ -107,7 +107,7 @@ function useWizardSections(): WizardSection[] {
     }, [config, resolveTitle, resolveItem]);
 }
 
-// ========== 组件 ==========
+// ========== 구성요소 ==========
 
 export const Wizard: React.FC = () => {
     const { t } = useTranslation();
