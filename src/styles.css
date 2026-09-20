@@ -181,7 +181,7 @@
     }
 }
 
-/* 约束Shadow DOM内部根容器高度
+/* Shadow DOM의 내부 루트 컨테이너 높이를 제한하십시오.
 ----------------------------------------------------------------*/
 :host {
     display: block;
@@ -195,7 +195,7 @@
 }
 
 
-/* 自定义 Markdown 渲染样式 (用于 react-markdown 替代 @tailwindcss/typography)
+/* 사용자 지정 마크다운 렌더링 스타일 (react-markdown용, @tailwindcss/typography의 대안)
 ----------------------------------------------------------------*/
 .markdown-container {
     color: var(--foreground);
@@ -362,7 +362,7 @@
     border: 0;
 }
 
-/* .react-view(视图) 视图
+/* .react-view (뷰) 뷰
 ----------------------------------------------------------------*/
 .react-view__container {
     display: flex;
@@ -402,7 +402,7 @@
     z-index: -1
 }
 
-/* 沉浸式翻译
+/* 몰입형 번역
 ----------------------------------------------------------------*/
 #immersive-translate-ball {
     position: fixed;
