@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import './locales';     // 引入i18n配置
+import './locales';     // i18n 설정 가져오기
 
 import { App, Plugin, PluginManifest } from 'obsidian';
 import { DEFAULT_SETTINGS, I18nSettings, LLMProfile } from './settings/data';
@@ -30,36 +30,36 @@ import * as ReactDOM from 'react-dom/client';
 import { DevDebugCard } from './views/manager/dev-debug-card';
 
 // ==============================
-//          [入口] I18n
+//          [입구] I18n
 // ==============================
 /**
- * Obsidian 国际化翻译插件主类
+ * Obsidian 다국어 번역 플러그인
  */
 export default class I18N extends Plugin {
-    settings: I18nSettings;     // [变量] 总配置文件
+    settings: I18nSettings;     // [변수] 마스터 구성 파일
     css: string;
-    sharedStyleSheet?: CSSStyleSheet; // [变量] 构建好后被各视图共享的只读 CSSStyleSheet 对象
-    // [核心管理器] - 插件功能模块协调中心
-    notice: NoticeManager;      // [管理器] 通知管理器
-    logger: LoggerManager;      // [管理器] 日志管理器
-    view: ViewManager;          // [管理器] 视图管理器
-    api: APIManager;            // [管理器] API管理器
-    stateManager: StateManager; // [管理器] 状态管理器
-    backupManager: BackupManager; // [管理器] 备份管理器
-    sourceManager: SourceManager; // [管理器] 翻译源管理器 
-    injectorManager: InjectorManager; // [管理器] 注入管理器 
-    coreManager: CoreManager; // [管理器] 核心管理器
-    extractManager: ExtractManager; // [管理器] 提取助手管理器1
-    autoManager: AutoManager; // [管理器] 自动化管理器
-    activeSettingTab: string = 'basis'; // [变量] 当前设置页激活的选项卡
+    sharedStyleSheet?: CSSStyleSheet; // [변수] 생성 후 여러 뷰가 공유하는 읽기 전용 CSSStyleSheet 객체.
+    // [Core Manager] – 플러그인 기능 모듈 간 조정 허브
+    notice: NoticeManager;      // [관리자] 알림 관리자
+    logger: LoggerManager;      // [관리자] 로그 관리자
+    view: ViewManager;          // [관리자] 뷰 관리자
+    api: APIManager;            // [관리자] API 관리자
+    stateManager: StateManager; // [관리자] 상태 관리자
+    backupManager: BackupManager; // [관리자] 백업 관리자
+    sourceManager: SourceManager; // [관리자] 번역 관리자
+    injectorManager: InjectorManager; // [관리자] 주입 관리자
+    coreManager: CoreManager; // [관리자] 핵심 관리자
+    extractManager: ExtractManager; // [관리자] 추출 보조 관리자1
+    autoManager: AutoManager; // [관리자] 자동화 관리
+    activeSettingTab: string = 'basis'; // [변수] 현재 활성된 페이지
 
     private devRoot: ReactDOM.Root | null = null;
 
 
-    // [变量] 插件贡献者缓存列表
+    // [변수] 플러그인 기여자 목록
     contributorCache: Contributor[] | undefined;
 
-    // [变量][共享云端] 选中译文对象
+    // [변수][공유 클라우드] 번역할 텍스트 선택
     sharePath: string;
     shareType: number;
     shareObj: PluginManifest | OBThemeManifest;
@@ -68,28 +68,28 @@ export default class I18N extends Plugin {
     originalPluginsManifests: PluginManifest[];
 
     async onload() {
-        info(this);                     // [加载] 插件信息
-        icons();                        // [加载] 图标类
-        commands(this.app, this);       // [加载] 指令类
-        await this.loadSettings();      // [加载] 配置类
+        info(this);                     // [load] 플러그인 정보
+        icons();                        // [load] 아이콘
+        commands(this.app, this);       // [load] 명령
+        await this.loadSettings();      // [load] 구성
 
         if (process.env.DEV_MODE) {
             this.initDevDebug();
         }
 
-        this.initManagers();            // [初始化] 管理器
+        this.initManagers();            // [초기화] 관리자
 
-        this.coreManager.getCss();      // [加载] 样式类
+        this.coreManager.getCss();      // [load] 스타일 클래스
 
         if (this.settings.agreement) {
-            this.initViews();           // [初始化] 视图
-            this.initCores();           // [初始化] 核心函数
-            this.coreManager.setupRibbonIcons();    // [初始化] 功能区图标 1
+            this.initViews();           // [초기화] 뷰
+            this.initCores();           // [초기화] 핵심 기능
+            this.coreManager.setupRibbonIcons();    // [초기화] 리본 아이콘1
 
             useGlobalStoreInstance.getState().setI18n(this);
             this.addSettingTab(new I18nSettingTab(this.app, this));
 
-            // [自动化] 注册定时扫描任务 (每 30 分钟检查一次是否到达设定的间隔)
+            // [자동화] 注册定时扫描任务 (每 30 分钟检查一次是否到达设定的间隔)
             this.registerInterval(
                 (window as any).setInterval(() => {
                     this.autoManager.checkAndRunDiscovery();
@@ -227,7 +227,7 @@ export default class I18N extends Plugin {
     }
 
     /**
-     * 注册插件自定义视图
+     * 플러그인용 사용자 지정 뷰를 등록하세요.
      */
     private initViews() {
         this.view.addView(EDITOR_VIEW_TYPE, (leaf) => new EditorView(leaf, this), true);
@@ -246,24 +246,24 @@ export default class I18N extends Plugin {
         if (this.settings.autoDiscovery) await this.autoManager.runDiscovery();
         if (this.settings.modeImt) this.coreManager.activateIMT();
 
-        // [清理] 检查并清理已卸载插件的冗余备份与状态
+        // [청소] 제거된 플러그인의 중복 백업 및 상태 확인 후 정리합니다.
         await this.stateManager.cleanupRemovedResources(this.app);
     }
 
     public async onAgreementAccepted() {
-        this.initViews();           // [初始化] 视图
-        await this.initCores();           // [初始化] 核心函数
-        this.coreManager.setupRibbonIcons();    // [初始化] 功能区图标
+        this.initViews();           // [초기화] 뷰
+        await this.initCores();           // [초기화] 핵심 기능
+        this.coreManager.setupRibbonIcons();    // [초기화] 리본 아이콘
 
         this.addSettingTab(new I18nSettingTab(this.app, this));
-        // 初始化完成赋值全局I18N实例
+        // 초기화가 완료된 후 전역 I18N 인스턴스를 할당하십시오.
         useGlobalStoreInstance.getState().setI18n(this);
 
         this.view.deactivateView(AGREEMENT_VIEW_TYPE);
         this.view.activateView(WIZARD_VIEW_TYPE);
     }
 
-    /** 加载共享视图。 */
+    /** 공유 view load */
     public shareLoad(type: number, path: string, obj: PluginManifest | any) {
         this.shareType = type;
         this.sharePath = path;
