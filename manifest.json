@@ -3,7 +3,7 @@
 	"name": "I18N",
 	"version": "2.0.21",
 	"minAppVersion": "1.5.8",
-	"description": "专为Obsidian打造的插件国际化工具，助力用户轻松跨越语言障碍，实现插件界面的无缝汉化。",
+	"description": "Obsidian용 다국어 번역 플러그인 (커뮤니티 플러그인 번역 지원)",
 	"author": "zero",
 	"authorUrl": "https://github.com/eondrcode/obsidian-i18n",
 	"fundingUrl": "https://afdian.com/a/eondr",
