@@ -1,13 +1,13 @@
 /**
- * Wizard 配置服务
- * 
- * 目前使用硬编码配置
+* 마법사 기반 설정 서비스
+*
+* 현재 하드코딩된 설정을 사용함
  */
 import Url from 'src/constants/url';
 import { WizardRemoteConfig } from '~/types';
 
 /**
- * 硬编码的默认配置
+ * 하드코딩된 기본 설정
  */
 export const WIZARD_CONFIG: WizardRemoteConfig = {
     version: 1,
@@ -74,7 +74,7 @@ export const WIZARD_CONFIG: WizardRemoteConfig = {
 };
 
 /**
- * 获取 Wizard 配置（同步返回硬编码配置）
+ * 마법사 구성 가져오기 (하드코딩된 구성을 동기식으로 반환)
  */
 export function getWizardConfig(): WizardRemoteConfig {
     return WIZARD_CONFIG;
