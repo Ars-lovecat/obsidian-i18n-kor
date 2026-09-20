@@ -3,36 +3,41 @@ import process from "process";
 import builtins from "builtin-modules";
 
 /**
- * 此时定义的 banner 会被插入到生成文件的最顶部。
- * 通常用于添加版权信息、版本号或环境声明。
+ * 여기에 정의된 배너는 생성된 파일의 최상단에 삽입됩니다.
+ * 주로 저작권 정보, 버전 번호 또는 환경 선언을 추가하는 데 사용됩니다.
  */
 const banner = ``;
 
 /**
- * 通过命令行参数判断当前是否为生产环境构建。
- * 命令示例: node esbuild.config.mjs production
+ * 명령줄 인수를 기반으로 현재 빌드가 운영 환경용인지 확인하십시오.
+ * 명령 예시: node esbuild.config.mjs production
  */
 const prod = (process.argv[2] === "production");
 
 /**
- * 创建 esbuild 的构建上下文。
- * context 允许我们配置构建参数，并开启监视模式 (watch) 或重建功能。
+ * esbuild 빌드 컨텍스트를 생성합니다.
+ * context를 사용하면 빌드 매개변수를 설정하고, 
+ * watch 모드나 rebuild 기능을 활성화할 수 있습니다.
  */
 const context = await esbuild.context({
-    // 在生成的 JS 文件开头插入代码
+    // 생성된 JS 파일의 시작 부분에 코드를 삽입하세요.
     banner: {
         js: banner,
     },
 
-    // 构建的入口文件，esbuild 会从这里开始递归分析所有的 import 依赖
+    // 빌드 진입점의 경우, esbuild는 여기서부터 시작하여 
+	// 모든 import 의존성을 재귀적으로 분석합니다.
     entryPoints: ["main.ts"],
 
-    // 是否将所有依赖合并到一个文件中。对于 Obsidian 插件来说，必须设为 true
+    // 모든 의존성을 단일 파일로 묶을지 여부입니다. 
+	// 이 설정은 반드시 `true`로 지정해야 합니다.
     bundle: true,
 
-    // 外部依赖列表。这些模块不会被打包进 main.js，而是假设运行时环境中已存在。
-    // 对于 Obsidian 插件，obsidian、electron 和各类 codemirror 组件都应设为外部，
-    // 这样可以避免包体积过大，并利用编辑器自带的库。
+	// 외부 의존성 목록입니다. 이 모듈들은 main.js로 번들링되지 않으며,
+	// 대신 런타임 환경에 이미 존재한다고 가정합니다. 
+	// Obsidian 플러그인의 경우, 번들 크기가 과도하게 커지는 것을 방지하고
+	// 에디터에 내장된 라이브러리를 활용하기 위해 obsidian, electron 및
+	// 다양한 CodeMirror 구성 요소를 외부(external)로 지정해야 합니다.
     external: [
         "obsidian",
         "electron",
@@ -47,52 +52,57 @@ const context = await esbuild.context({
         "@lezer/common",
         "@lezer/highlight",
         "@lezer/lr",
-        ...builtins // 包含 Node.js 的内置模块（如 path, fs 等）
+        ...builtins // Node.js 내장 모듈(path, fs 등)을 포함합니다.
     ],
 
-    // 输出代码的格式。Obsidian 插件通常使用 CommonJS ('cjs') 格式
+    // 출력 코드 형식. 일반적으로 CommonJS('cjs') 형식을 사용합니다.
     format: "cjs",
 
-    // 设置目标环境。确保输出的代码与对应版本的 JavaScript 引擎兼容
+    // 대상 환경을 설정하십시오. 
+	// 출력 코드가 해당 버전의 JavaScript 엔진과 호환되도록 하십시오.
     target: "es2020",
 
-    // 构建过程中的日志详细程度。'info' 会输出构建耗时和基本状态信息
+    // 빌드 과정 중의 로그 상세 수준입니다. 
+	// 'info'로 설정하면 빌드 소요 시간과 기본 상태 정보가 출력됩니다.
     logLevel: "info",
 
-    // 定义全局变量，用于在代码中判断环境
+    // 코드 내에서 환경을 결정하기 위한 전역 변수를 정의하십시오.
     define: {
         "process.env.DEV_MODE": JSON.stringify(!prod),
     },
 
-    /**
-     * Source Map 配置：
-     * 1. 'inline': 地图信息以 Base64 字符串嵌入在 main.js 结尾（导致文件非常巨大，如 17MB，不建议生产环境使用）。
-     * 2. true: 生成独立的 main.js.map 文件（推荐，兼顾调试与体积）。
-     * 3. false: 不生成任何地图信息，体积最小但无法源码级调试。
-     */
+	/**
+	* 소스 맵(Source Map) 설정:
+	* 1. inline: 맵 정보가 main.js 파일 끝에 Base64 문자열로 포함됨 (권장X), 파일 크기가 매우 커짐.
+	* 2. true: 별도의 main.js.map 파일을 생성함 (권장), 디버깅 편의성과 파일 크기 간의 균형을 고려함 
+	* 3. false: 맵 정보를 생성하지 않음; 파일 크기는 가장 작지만 소스 수준의 디버깅은 불가능함. 
+	*/
     sourcemap: true,
 
-    // 自动移除未被引用的代码（死代码删除），有助于减小最终产物的体积
+    // 참조되지 않는 코드(죽은 코드) 자동 제거
     treeShaking: true,
 
-    // 压缩代码。会移除空格、换行符，并混淆变量名，让文件体积最小。
+    // 코드를 최소화(minify). 공백과 줄바꿈을 제거, 변수 이름 난독화
     minify: true,
 
-    // 在生产环境下移除指定的调试语句。例如移除所有的 console.log 和 debugger
+    // 프로덕션 환경에서 지정된 디버깅 문 제거
+	// 예시) 모든 console.log 및 디버거를 제거
     drop: prod ? ["console", "debugger"] : [],
 
-    // 控制如何处理法律注释（如特殊的版权声明）。'none' 表示全部移除。
+    // 법적 고지(특정 저작권 문구 등) 처리 방식 설정
+	// none: 고지 모두 제거
     legalComments: "none",
 
-    // 最终生成的产物路径及文件名
+    // 최종 생성된 결과물의 경로 및 파일명
     outfile: "main.js",
 });
 
 if (prod) {
-    // 生产模式：直接运行一次构建流程并退出
+    // 프로덕션 모드: 빌드 프로세스 1회 실행 후 종료
     await context.rebuild();
     process.exit(0);
 } else {
-    // 开发模式：开启监视模式，每当你修改并保存源码时，esbuild 会秒级自动重新构建
+    // 개발 모드: 감시(watch) 모드를 활성화 시, 
+	// 소스코드 수정, 저장 시마다 esbuild가 자동으로 몇 초 만에 다시 빌드
     await context.watch();
 }
