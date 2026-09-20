@@ -16,56 +16,8 @@
   "navigation": {
     "languages": [
       {
-        "language": "zh-Hans",
-        "default": true,
-        "groups": [
-          {
-            "group": "开始使用",
-            "pages": [
-              "introduction",
-              "installation",
-              "quickstart"
-            ]
-          },
-          {
-            "group": "核心功能",
-            "pages": [
-              "features/ast-editor",
-              "features/regex-editor",
-              "features/ai-translation",
-              "features/apply-restore",
-              "features/cloud-sharing"
-            ]
-          },
-          {
-            "group": "配置说明",
-            "pages": [
-              "configuration/ai-providers",
-              "configuration/general-settings",
-              "configuration/automation",
-              "configuration/advanced"
-            ]
-          },
-          {
-            "group": "使用指南",
-            "pages": [
-              "guides/translate-a-plugin",
-              "guides/translate-a-theme",
-              "guides/share-translations",
-              "guides/import-community-translations"
-            ]
-          },
-          {
-            "group": "帮助与排错",
-            "pages": [
-              "help/faq",
-              "help/troubleshooting"
-            ]
-          }
-        ]
-      },
-      {
         "language": "en",
+		"default": true,
         "groups": [
           {
             "group": "Get Started",
